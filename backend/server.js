@@ -14,6 +14,7 @@ db.connect();
 
 
 
+
 //middleware
 app.use(bodyParser.json({ limit: "500mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "500mb" }));
@@ -41,6 +42,16 @@ app.get("*", (req, res) => {
   });
   
   app.use(cors());
+  // deployment config
+//const path = require("path");
+__dirname = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+}
   
   app.listen(PORT, () => {
     console.log(`Stack Overflow Clone API is running on PORT No- ${PORT}`);
